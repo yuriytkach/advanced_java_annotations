@@ -1,0 +1,1 @@
+Sample code from the Advanced Java Annotations training.
