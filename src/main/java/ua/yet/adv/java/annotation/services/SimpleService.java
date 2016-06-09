@@ -1,6 +1,7 @@
 package ua.yet.adv.java.annotation.services;
 
 import ua.yet.adv.java.annotation.Init;
+import ua.yet.adv.java.annotation.Note;
 import ua.yet.adv.java.annotation.Service;
 
 /**
@@ -11,6 +12,8 @@ import ua.yet.adv.java.annotation.Service;
  *
  */
 @Service(name = "Simple service")
+@Note("This is an interesting service")
+@Note("I bet you've never seen something like that :)")
 public class SimpleService {
 
     /**
