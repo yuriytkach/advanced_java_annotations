@@ -17,18 +17,27 @@ import ua.yet.adv.java.annotation.Service;
 public class SimpleService {
 
     /**
-     * Private field to showcase the impossibility of changing primitive private
-     * fields with reflection
+     * Private field to showcase the possibility of changing private fields with
+     * reflection
      */
     private int inits = 0;
+
+    /**
+     * Private final field to showcase the impossibility of changing final
+     * primitive fields with reflection
+     */
+    private final int CONST = 10;
 
     /**
      * Init method that will be called since it contains no arguments
      */
     @Init
     public void initService() {
-        System.out.println("Initializing...");
         inits++;
+        
+        System.out.println(
+                "  >> Initializing in public init... (inits="
+                        + inits + ", const=" + CONST + ")");
     }
 
     /**
@@ -39,7 +48,8 @@ public class SimpleService {
      */
     @Init
     public void initServiceArgs(int arg) {
-        System.out.println("Initializing with args ...");
+        inits++;
+        System.out.println("  >> Initializing with args ...");
     }
 
     /**
@@ -48,7 +58,10 @@ public class SimpleService {
      */
     @Init
     private void privateInit() {
-        System.out.println("Initializing in private..." + inits);
+        inits++;
+        System.out.println(
+                "  >> Initializing in private init... (inits="
+                        + inits + ", const=" + CONST + ")");
     }
 
     /**
