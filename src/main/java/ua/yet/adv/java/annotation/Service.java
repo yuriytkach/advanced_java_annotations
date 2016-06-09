@@ -27,7 +27,8 @@ public @interface Service {
 
     /**
      * Specifies, if the service should be loaded lazily. Default is
-     * <code>false</code>
+     * <code>false</code>. If <code>false</code> then service's init methods
+     * will be called after creating instance of the service.
      */
     boolean lazyLoad() default false;
 
