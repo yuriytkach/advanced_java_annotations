@@ -4,6 +4,106 @@
 	<groupId>ua.yet.adv.java</groupId>
 	<artifactId>annotations</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>AdvancedJava_Annotations</name>
+	<name>advanced_java_annotations</name>
+	<description>Sample code from the Advanced Java Annotations training</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<findbugs.version>3.0.1</findbugs.version>
+		<junit.version>4.12</junit.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerVersion>${java.version}</compilerVersion>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<fork>true</fork>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<lineLength>120</lineLength>
+					<includePom>true</includePom>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.3</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.3</version>
+				<configuration>
+					<!-- Enables analysis which takes more memory but finds more bugs. If 
+						you run out of memory, changes the value of the effort element to 'Low'. -->
+					<effort>Max</effort>
+					<!-- Build doesn't fail if problems are found -->
+					<failOnError>false</failOnError>
+					<!-- Reports all bugs (other values are medium and max) -->
+					<threshold>Low</threshold>
+					<!-- Produces XML report -->
+					<xmlOutput>true</xmlOutput>
+					<!-- Configures the directory in which the XML report is created -->
+					<findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>${findbugs.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<issueManagement>
+		<system>GIT</system>
+		<url>https://github.com/yuriytkach/advanced_java_annotations/issues</url>
+	</issueManagement>
 
 </project>
