@@ -3,29 +3,56 @@ package ua.yet.adv.java.annotation.services;
 import ua.yet.adv.java.annotation.Init;
 import ua.yet.adv.java.annotation.Service;
 
+/**
+ * Service that will be loaded by loader right away. Contains several init
+ * methods, some of which will be called.
+ * 
+ * @author Yuriy Tkach
+ *
+ */
 @Service(name = "Simple service")
 public class SimpleService {
 
-	private int inits = 0;
+    /**
+     * Private field to showcase the impossibility of changing primitive private
+     * fields with reflection
+     */
+    private int inits = 0;
 
-	@Init
-	public void initService() {
-		System.out.println("Initializing...");
-		inits++;
-	}
+    /**
+     * Init method that will be called since it contains no arguments
+     */
+    @Init
+    public void initService() {
+        System.out.println("Initializing...");
+        inits++;
+    }
 
-	@Init
-	public void initServiceArgs(int arg) {
-		System.out.println("Initializing with args ...");
-	}
+    /**
+     * Init method that won't be called, because it contains arguments
+     * 
+     * @param arg
+     *            Some argument
+     */
+    @Init
+    public void initServiceArgs(int arg) {
+        System.out.println("Initializing with args ...");
+    }
 
-	@Init
-	private void privateInit() {
-		System.out.println("Initializing in private..." + inits);
-	}
+    /**
+     * Private init method that will be called showing how to do that will
+     * reflection
+     */
+    @Init
+    private void privateInit() {
+        System.out.println("Initializing in private..." + inits);
+    }
 
-	public void someOtherMethod() {
+    /**
+     * Just some other method
+     */
+    public void someOtherMethod() {
 
-	}
+    }
 
 }
