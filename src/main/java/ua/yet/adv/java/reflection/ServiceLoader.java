@@ -16,7 +16,7 @@ import ua.yet.adv.java.annotation.Service;
  * methods marked with annotation @{@link Init} if <code>lazyLoad=false</code>.
  * In addition to that the class showcases the possibility to access private
  * fields and methods.
- * 
+ *
  * @author Yuriy Tkach
  */
 @Slf4j
@@ -30,9 +30,8 @@ public class ServiceLoader {
     /**
      * Main method that calls service loading by providing full class name of
      * the service
-     * 
-     * @param args
-     *            No arguments are expected
+     *
+     * @param args No arguments are expected
      */
     public static void main(String[] args) {
         loadService("ua.yet.adv.java.annotation.services.SimpleService");
@@ -45,22 +44,15 @@ public class ServiceLoader {
      * Method gets the class object from the provided <code>className</code>.
      * Then inspects the class to find annotation @{@link Service}. If found,
      * then calls {@link #createAndInitService(Class)} method.
-     * 
-     * @param className
-     *            Full class name of the service
+     *
+     * @param className Full class name of the service
      */
     private static void loadService(String className) {
         try {
             Class<?> clazz = Class.forName(className);
             if (clazz.isAnnotationPresent(Service.class)) {
 
-                try {
-                    createAndInitService(clazz);
-
-                } catch (InstantiationException | IllegalAccessException e) {
-                    log.error("Failed to create service instance for "
-                            + className + ": " + e.getMessage());
-                }
+                createAndInitService(clazz);
 
             } else {
                 log.info("Failed to load service " + className
@@ -75,30 +67,31 @@ public class ServiceLoader {
     /**
      * Creates new instance of the service class and puts it into the map. If
      * <code>lazyLoad=false</code> then invokes init methods.
-     * 
-     * @param clazz
-     *            Service class object
-     * @throws InstantiationException
-     *             If instance of the service object can't be created
-     * @throws IllegalAccessException
-     *             If constructor of the service object can't be accessed
+     *
+     * @param clazz Service class object
+     * @throws InstantiationException If instance of the service object can't be created
+     * @throws IllegalAccessException If constructor of the service object can't be accessed
      */
-    private static void createAndInitService(Class<?> clazz)
-            throws InstantiationException, IllegalAccessException {
-        Object serviceObj = clazz.newInstance();
+    private static void createAndInitService(Class<?> clazz){
+        try {
+            Object serviceObj = clazz.newInstance();
 
-        Service annotation = clazz.getAnnotation(Service.class);
+            Service annotation = clazz.getAnnotation(Service.class);
 
-        servicesMap.put(annotation.name(), serviceObj);
+            servicesMap.put(annotation.name(), serviceObj);
 
-        log.info("Added service instance for " + clazz.getName()
-                + ": " + annotation.name());
+            log.info("Added service instance for " + clazz.getName()
+                    + ": " + annotation.name());
 
-        if (!annotation.lazyLoad()) {
-            setPrivateField(serviceObj);
-            invokeInitMethods(clazz.getDeclaredMethods(), serviceObj);
-        } else {
-            log.info("  Service will lazy load");
+            if (!annotation.lazyLoad()) {
+                setPrivateField(serviceObj);
+                invokeInitMethods(clazz.getDeclaredMethods(), serviceObj);
+            } else {
+                log.info("  Service will lazy load");
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error("Failed to create service instance for "
+                    + clazz.getName() + ": " + e.getMessage());
         }
     }
 
@@ -108,11 +101,9 @@ public class ServiceLoader {
      * <code>true<code>.
      * If invocation throws exception, then catching it and re-throwing it if
      * <code>suppressException=false</code>. Otherwise, just output it.
-     * 
-     * @param methods
-     *            Array of service's methods
-     * @param serviceObj
-     *            Service object
+     *
+     * @param methods    Array of service's methods
+     * @param serviceObj Service object
      */
     private static void invokeInitMethods(Method[] methods, Object serviceObj) {
         for (Method method : methods) {
@@ -155,9 +146,8 @@ public class ServiceLoader {
      * Trying to set private field value of the service object. The method will
      * fail if the field is not found. The method won't fail if the field is
      * found, however, the value won't change if the field is final primitive
-     * 
-     * @param serviceObj
-     *            Object of the service
+     *
+     * @param serviceObj Object of the service
      */
     private static void setPrivateField(Object serviceObj) {
         try {
