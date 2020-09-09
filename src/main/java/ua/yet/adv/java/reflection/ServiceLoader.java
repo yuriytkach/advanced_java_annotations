@@ -1,6 +1,7 @@
 package ua.yet.adv.java.reflection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class ServiceLoader {
      */
     private static void createAndInitService(Class<?> clazz){
         try {
-            Object serviceObj = clazz.newInstance();
+            Object serviceObj = clazz.getDeclaredConstructor().newInstance();
 
             Service annotation = clazz.getAnnotation(Service.class);
 
@@ -89,7 +90,8 @@ public class ServiceLoader {
             } else {
                 log.info("  Service will lazy load");
             }
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | NoSuchMethodException
+                | InvocationTargetException |IllegalAccessException e) {
             log.error("Failed to create service instance for "
                     + clazz.getName() + ": " + e.getMessage());
         }
@@ -110,8 +112,7 @@ public class ServiceLoader {
             if (method.isAnnotationPresent(Init.class)) {
 
                 if (method.getParameterTypes().length > 0) {
-                    log.info(
-                            "  Cannot call init method with arguments: "
+                    log.info("  Cannot call init method with arguments: "
                                     + method.getName());
                 } else {
 
@@ -127,7 +128,7 @@ public class ServiceLoader {
                         log.info("  Invoked init method for service: "
                                 + method.getName());
 
-                    } catch (Throwable e) {
+                    } catch (Exception e) {
                         Init initAnnotation = method.getAnnotation(Init.class);
 
                         if (initAnnotation.suppressException()) {
