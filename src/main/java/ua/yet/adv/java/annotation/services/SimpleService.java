@@ -1,5 +1,6 @@
 package ua.yet.adv.java.annotation.services;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.yet.adv.java.annotation.Init;
 import ua.yet.adv.java.annotation.Note;
 import ua.yet.adv.java.annotation.Service;
@@ -11,6 +12,7 @@ import ua.yet.adv.java.annotation.Service;
  * @author Yuriy Tkach
  *
  */
+@Slf4j
 @Service(name = "Simple service")
 @Note("This is an interesting service")
 @Note("I bet you've never seen something like that :)")
@@ -34,10 +36,9 @@ public class SimpleService {
     @Init
     public void initService() {
         inits++;
-        
-        System.out.println(
-                "  >> Initializing in public init... (inits="
-                        + inits + ", const=" + CONST + ")");
+
+        log.info("  >> Initializing in public init... (inits="
+                        + inits + ", const = " + CONST + " )");
     }
 
     /**
@@ -49,7 +50,7 @@ public class SimpleService {
     @Init
     public void initServiceArgs(int arg) {
         inits++;
-        System.out.println("  >> Initializing with args ...");
+        log.info("  >> Initializing with args ...");
     }
 
     /**
@@ -59,7 +60,7 @@ public class SimpleService {
     @Init
     private void privateInit() {
         inits++;
-        System.out.println(
+        log.info(
                 "  >> Initializing in private init... (inits="
                         + inits + ", const=" + CONST + ")");
     }

@@ -1,5 +1,6 @@
 package ua.yet.adv.java.annotation.services;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.yet.adv.java.annotation.Init;
 import ua.yet.adv.java.annotation.Service;
 
@@ -10,6 +11,7 @@ import ua.yet.adv.java.annotation.Service;
  * @author Yuriy Tkach
  *
  */
+@Slf4j
 @Service(name = "Lazy service", lazyLoad = true)
 public class LazyService {
 
@@ -21,7 +23,7 @@ public class LazyService {
      */
     @Init
     public void init() throws Exception {
-        System.out.println("I was lazy inited");
+        log.info("I was lazy inited");
     }
 
     /**

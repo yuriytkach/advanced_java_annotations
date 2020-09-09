@@ -1,10 +1,13 @@
 package ua.yet.adv.java.annotation;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Sample class to showcase JDK's build-in annotations
  * 
  * @author Yuriy Tkach
  */
+@Slf4j
 public class JavaBuildInAnnotations {
 
     @Deprecated
@@ -16,7 +19,7 @@ public class JavaBuildInAnnotations {
     }
 
     public void someMethod(@Deprecated int haha) {
-        System.out.println(haha + hello);
+        log.info(String.valueOf(haha + hello));
     }
 
     @SafeVarargs

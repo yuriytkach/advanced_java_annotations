@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.yet.adv.java.annotation.Init;
 import ua.yet.adv.java.annotation.Service;
 
@@ -18,6 +19,7 @@ import ua.yet.adv.java.annotation.Service;
  * 
  * @author Yuriy Tkach
  */
+@Slf4j
 public class ServiceLoader {
 
     /**
@@ -56,16 +58,16 @@ public class ServiceLoader {
                     createAndInitService(clazz);
 
                 } catch (InstantiationException | IllegalAccessException e) {
-                    System.err.println("Failed to create service instance for "
+                    log.error("Failed to create service instance for "
                             + className + ": " + e.getMessage());
                 }
 
             } else {
-                System.out.println("Failed to load service " + className
+                log.info("Failed to load service " + className
                         + ": No Service annotation present");
             }
         } catch (ClassNotFoundException e) {
-            System.err.println("Failed to load service " + className + ": "
+            log.error("Failed to load service " + className + ": "
                     + e.getMessage());
         }
     }
@@ -89,14 +91,14 @@ public class ServiceLoader {
 
         servicesMap.put(annotation.name(), serviceObj);
 
-        System.out.println("Added service instance for " + clazz.getName()
+        log.info("Added service instance for " + clazz.getName()
                 + ": " + annotation.name());
 
         if (!annotation.lazyLoad()) {
             setPrivateField(serviceObj);
             invokeInitMethods(clazz.getDeclaredMethods(), serviceObj);
         } else {
-            System.out.println("  Service will lazy load");
+            log.info("  Service will lazy load");
         }
     }
 
@@ -117,7 +119,7 @@ public class ServiceLoader {
             if (method.isAnnotationPresent(Init.class)) {
 
                 if (method.getParameterTypes().length > 0) {
-                    System.out.println(
+                    log.info(
                             "  Cannot call init method with arguments: "
                                     + method.getName());
                 } else {
@@ -126,19 +128,19 @@ public class ServiceLoader {
 
                         if (!Modifier.isPublic(method.getModifiers())) {
                             method.setAccessible(true);
-                            System.out.println("  Made method accessible: "
+                            log.info("  Made method accessible: "
                                     + method.getName());
                         }
                         method.invoke(serviceObj);
 
-                        System.out.println("  Invoked init method for service: "
+                        log.info("  Invoked init method for service: "
                                 + method.getName());
 
                     } catch (Throwable e) {
                         Init initAnnotation = method.getAnnotation(Init.class);
 
                         if (initAnnotation.suppressException()) {
-                            System.out.println("  Error occured during init: "
+                            log.info("  Error occured during init: "
                                     + e.getMessage());
                         } else {
                             throw new RuntimeException(e);
@@ -169,10 +171,10 @@ public class ServiceLoader {
 
         } catch (SecurityException | IllegalArgumentException
                 | IllegalAccessException e) {
-            System.out.println(
+            log.info(
                     "  Failed to set private field: " + e.getMessage());
         } catch (NoSuchFieldException e) {
-            System.out.println("  Field 'inits' is not found in class");
+            log.info("  Field 'inits' is not found in class");
         }
     }
 }
