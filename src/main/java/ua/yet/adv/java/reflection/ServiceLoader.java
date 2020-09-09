@@ -115,30 +115,31 @@ public class ServiceLoader {
                     log.info("  Cannot call init method with arguments: "
                                     + method.getName());
                 } else {
-
-                    try {
-
-                        if (!Modifier.isPublic(method.getModifiers())) {
-                            method.setAccessible(true);
-                            log.info("  Made method accessible: "
-                                    + method.getName());
-                        }
-                        method.invoke(serviceObj);
-
-                        log.info("  Invoked init method for service: "
-                                + method.getName());
-
-                    } catch (Exception e) {
-                        Init initAnnotation = method.getAnnotation(Init.class);
-
-                        if (initAnnotation.suppressException()) {
-                            log.info("  Error occured during init: "
-                                    + e.getMessage());
-                        } else {
-                            throw new RuntimeException(e);
-                        }
-                    }
+                    invokeInitMethod(serviceObj, method);
                 }
+            }
+        }
+    }
+
+    private static void invokeInitMethod(Object serviceObj, Method method) {
+        try {
+            if (!Modifier.isPublic(method.getModifiers())) {
+                method.setAccessible(true);
+                log.info("  Made method accessible: "
+                        + method.getName());
+            }
+            method.invoke(serviceObj);
+
+            log.info("  Invoked init method for service: "
+                    + method.getName());
+        } catch (Exception e) {
+            Init initAnnotation = method.getAnnotation(Init.class);
+
+            if (initAnnotation.suppressException()) {
+                log.info("  Error occurred during init: "
+                        + e.getMessage());
+            } else {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -162,8 +163,7 @@ public class ServiceLoader {
 
         } catch (SecurityException | IllegalArgumentException
                 | IllegalAccessException e) {
-            log.info(
-                    "  Failed to set private field: " + e.getMessage());
+            log.info("  Failed to set private field: " + e.getMessage());
         } catch (NoSuchFieldException e) {
             log.info("  Field 'inits' is not found in class");
         }
